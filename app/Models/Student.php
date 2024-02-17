@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     protected $fillable = [
+        'school_id',
         'admission_no',
         'upi_number',
         'class_id',

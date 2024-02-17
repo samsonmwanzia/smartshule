@@ -5,63 +5,35 @@
             <input type="text" class="form-control" placeholder="Search menu...">
         </div>
     </form>
+    <?php
+    $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
+    $notifications = (new \App\Http\Controllers\SchoolController())->getUnreadNotifications($school->id);
+    ?>
     <div class="menu-item dropdown">
         <a href="#" data-bs-toggle="dropdown" data-display="static" class="menu-link">
             <div class="menu-icon"><i class="fa fa-bell nav-icon"></i></div>
-            <div class="menu-label">3</div>
+            <div class="menu-label">{{ $notifications->count() }}</div>
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-notification">
             <h6 class="dropdown-header text-body-emphasis mb-1">Notifications</h6>
-            <a href="#" class="dropdown-notification-item">
-                <div class="dropdown-notification-icon">
-                    <i class="fa fa-receipt fa-lg fa-fw text-success"></i>
-                </div>
-                <div class="dropdown-notification-info">
-                    <div class="title">Your store has a new order for 2 items totaling $1,299.00</div>
-                    <div class="time">just now</div>
-                </div>
-                <div class="dropdown-notification-arrow">
-                    <i class="fa fa-chevron-right"></i>
-                </div>
-            </a>
-            <a href="#" class="dropdown-notification-item">
-                <div class="dropdown-notification-icon">
-                    <i class="far fa-user-circle fa-lg fa-fw text-muted"></i>
-                </div>
-                <div class="dropdown-notification-info">
-                    <div class="title">3 new customer account is created</div>
-                    <div class="time">2 minutes ago</div>
-                </div>
-                <div class="dropdown-notification-arrow">
-                    <i class="fa fa-chevron-right"></i>
-                </div>
-            </a>
-            <a href="#" class="dropdown-notification-item">
-                <div class="dropdown-notification-icon">
-                    <img src="{{ asset('assets/img/icon/android.svg') }}" alt width="26">
-                </div>
-                <div class="dropdown-notification-info">
-                    <div class="title">Your android application has been approved</div>
-                    <div class="time">5 minutes ago</div>
-                </div>
-                <div class="dropdown-notification-arrow">
-                    <i class="fa fa-chevron-right"></i>
-                </div>
-            </a>
-            <a href="#" class="dropdown-notification-item">
-                <div class="dropdown-notification-icon">
-                    <img src="{{ asset('assets/img/icon/paypal.svg') }}" alt width="26">
-                </div>
-                <div class="dropdown-notification-info">
-                    <div class="title">Paypal payment method has been enabled for your store</div>
-                    <div class="time">10 minutes ago</div>
-                </div>
-                <div class="dropdown-notification-arrow">
-                    <i class="fa fa-chevron-right"></i>
-                </div>
-            </a>
+            @foreach($notifications as $notification)
+                <a href="#" class="dropdown-notification-item">
+                    <div class="dropdown-notification-icon">
+                        <i class="far fa-user-circle fa-lg fa-fw text-muted"></i>
+                    </div>
+                    <div class="dropdown-notification-info">
+                        <div class="title">{{ $notification->subject }}</div>
+                        <div class="time">{{ $notification->created_at->diffForHumans() }}</div>
+                    </div>
+                    <div class="dropdown-notification-arrow">
+                        <i class="fa fa-chevron-right"></i>
+                    </div>
+                </a>
+            @endforeach
+
+
             <div class="p-2 text-center mb-n1">
-                <a href="#" class="text-body-emphasis text-opacity-50 text-decoration-none">See all</a>
+                <a href="{{ route('school.notifications.all') }}" class="text-body-emphasis text-opacity-50 text-decoration-none">See all</a>
             </div>
         </div>
     </div>

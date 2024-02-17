@@ -74,6 +74,11 @@ Route::prefix('smartshule/school/')->group(function () {
         'as' => 'school.student.details',
     ]);
 
+    Route::get('/student/analysis', [
+        'uses' => 'App\Http\Controllers\SchoolController@populationAnalysis',
+        'as' => 'school.population.analysis',
+    ]);
+
     Route::get('/student/view/{id}', [
         'uses' => 'App\Http\Controllers\SchoolController@viewStudent',
         'as' => 'school.student.view',
@@ -124,6 +129,26 @@ Route::prefix('smartshule/school/')->group(function () {
         'as' => 'school.wards',
     ]);
 
+    Route::get('/fee/accountants', [
+        'uses' => 'App\Http\Controllers\SchoolController@getAccountants',
+        'as' => 'school.accountant.list',
+    ]);
+
+    Route::post('/fee/accountants', [
+        'uses' => 'App\Http\Controllers\SchoolController@postAccountant',
+        'as' => 'school.accountant.post',
+    ]);
+
+    Route::get('/staff/category', [
+        'uses' => 'App\Http\Controllers\SchoolController@getStaffCategory',
+        'as' => 'school.staff.category',
+    ]);
+
+    Route::post('/staff/category', [
+        'uses' => 'App\Http\Controllers\SchoolController@postStaffCategory',
+        'as' => 'school.staff.category.post',
+    ]);
+
 
     Route::get('/settings', [
         'uses' => 'App\Http\Controllers\SchoolController@settings',
@@ -134,6 +159,67 @@ Route::prefix('smartshule/school/')->group(function () {
         'uses' => 'App\Http\Controllers\SchoolController@postSettings',
         'as' => 'school.post.settings',
     ]);
+
+    Route::get('/report/students/', [
+        'uses' => 'App\Http\Controllers\SchoolController@studentReport',
+        'as' => 'school.student.report',
+    ]);
+
+    Route::get('/fee/type', [
+        'uses' => 'App\Http\Controllers\SchoolController@getFeeType',
+        'as' => 'school.fee.type',
+    ]);
+
+    Route::post('/fee/type', [
+        'uses' => 'App\Http\Controllers\SchoolController@postFeeType',
+        'as' => 'school.post.fee.type',
+    ]);
+
+    Route::post('/student/fee', [
+        'uses' => 'App\Http\Controllers\SchoolController@postStudentFee',
+        'as' => 'school.post.student.fee',
+    ]);
+
+    Route::get('/fee/statement', [
+        'uses' => 'App\Http\Controllers\SchoolController@getFeeStatement',
+        'as' => 'school.fee.statement',
+    ]);
+
+    Route::get('/fee/balance_report', [
+        'uses' => 'App\Http\Controllers\SchoolController@balanceFeeReport',
+        'as' => 'school.fee.balance_report',
+    ]);
+
+    Route::get('/notifications', [
+        'uses' => 'App\Http\Controllers\SchoolController@getNotifications',
+        'as' => 'school.notifications.all',
+    ]);
+
+    Route::get('/expenses/head', [
+        'uses' => 'App\Http\Controllers\SchoolController@getExpenseHead',
+        'as' => 'school.expense.head',
+    ]);
+
+    Route::post('/expenses/head', [
+        'uses' => 'App\Http\Controllers\SchoolController@postExpenseHead',
+        'as' => 'school.expense.head.post',
+    ]);
+
+    Route::get('/expenses/list', [
+        'uses' => 'App\Http\Controllers\SchoolController@getExpenseList',
+        'as' => 'school.expense.list',
+    ]);
+
+    Route::post('/expenses/list', [
+        'uses' => 'App\Http\Controllers\SchoolController@postExpenseList',
+        'as' => 'school.expense.list.post',
+    ]);
+
+    Route::get('agent/all/read', [
+        'uses' => 'App\Http\Controllers\SchoolController@readAll',
+        'as' => 'school.notification.readAll',
+    ]);
+
 });
 
 Route::prefix('smartshule/admin/')->group(function () {

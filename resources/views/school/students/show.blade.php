@@ -58,7 +58,7 @@
 
                 <div class="profile-content">
                     <div class="row">
-                        <div class="col-xl-8">
+                        <div class="col-xl-12">
                             <div class="tab-content p-0">
 
                                 <div class="tab-pane fade" id="profile-bio" role="tabpanel">
@@ -291,20 +291,40 @@
                                     </div>
                                 </div>
 
-
                                 <div class="tab-pane fade" id="profile-fees" role="tabpanel">
-                                    <div class="card">
-                                        <div class="list-group list-group-flush">
-                                            <div class="list-group-item d-flex align-items-center">
-                                                <div class="flex-fill">
-                                                    <div>Coming soon!</div>
-                                                    <div class="text-gray-500">{{ $student->father_name }}</div>
-                                                </div>
-                                                <div>
-                                                    <a href="#" data-bs-toggle="modal" class="btn btn-success disabled w-100px">Filled</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="card card-body">
+                                       <div class="table-responsive">
+                                           <table id="example" class="table table-sm table-bordered table-striped table-hover">
+                                               <thead>
+                                               <tr>
+                                                   <th><input class="form-check-input" type="checkbox"></th>
+                                                   @foreach($feeTypes as $feeType)
+                                                       <th>{{ $feeType->fee_type }}</th>
+                                                       <th>AMOUNT</th>
+                                                       <th>BALANCE</th>
+                                                   @endforeach
+                                               </tr>
+                                               </thead>
+                                               <tbody>
+                                               @foreach($fees as $fee)
+                                                   <tr>
+                                                       <td><input class="form-check-input" type="checkbox"></td>
+                                                       @foreach($feeTypes as $feeType)
+                                                           @if($feeType->id == 1)
+                                                               <td>{{ $feeType->total_amount }}</td>
+                                                               <td class="table-primary">{{ $fee->tuition_amount }}</td>
+                                                               <td class="table-danger">{{ $feeType->total_amount - $fee->tuition_amount }}</td>
+                                                           @else
+                                                               <td>{{ $feeType->total_amount }}</td>
+                                                               <td class="table-success">{{ $fee->fee_amount }}</td>
+                                                               <td class="table-danger">{{ $feeType->total_amount - $fee->fee_amount }}</td>
+                                                           @endif
+                                                       @endforeach
+                                                   </tr>
+                                               @endforeach
+                                               </tbody>
+                                           </table>
+                                       </div>
                                     </div>
                                 </div>
 

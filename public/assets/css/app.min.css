@@ -25792,7 +25792,7 @@ textarea.form-control-lg {
 }
 
 .app-content {
-    padding: 1.875rem 3.125rem;
+    padding: 1.875rem 1.125rem;
     position: relative;
     min-height: 100%;
     margin-left: 15rem
@@ -29623,10 +29623,14 @@ body .note-modal-backdrop {
 }
 
 .login .login-content {
-    max-width: 22.5rem;
+    max-width: 24.5rem;
     margin: 0 auto;
     position: relative;
-    flex: 1
+    flex: 1;
+    border: 1px solid #6773af;
+    padding: 20px;
+    box-shadow: 2px 2px 2px  #6773af;
+    border-radius: 5px;
 }
 
 .mailbox {

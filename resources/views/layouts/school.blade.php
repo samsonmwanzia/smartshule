@@ -13,6 +13,13 @@ $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
     <link href="{{ asset('assets/css/vendor.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet">
 
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+{{--    <link href="{{ asset('assets/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet">--}}
+{{--    <link href="{{ asset('assets/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet">--}}
+{{--    <link href="{{ asset('assets/plugins/datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5.min.css') }}" rel="stylesheet">--}}
+{{--    <link href="{{ asset('assets/plugins/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet">--}}
+
 </head>
 <body>
 
@@ -57,6 +64,11 @@ $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
 
 <script src="{{ asset('assets/js/vendor.min.js') }}" type="504547e9567d0ca300b47f18-text/javascript"></script>
 <script src="{{ asset('assets/js/app.min.js') }}" type="504547e9567d0ca300b47f18-text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+<script src="{{ asset('assets/js/demo/ui-modal-notification.demo.js') }}" type="5ffcd21d43dba4c13b0c75dc-text/javascript"></script>
 
 
 <script src="{{ asset('assets/plugins/apexcharts/dist/apexcharts.min.js') }}" type="504547e9567d0ca300b47f18-text/javascript"></script>
@@ -64,6 +76,7 @@ $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
 
 <script src="{{ asset('assets/js/loader.js') }}" data-cf-settings="504547e9567d0ca300b47f18-|49" defer></script>
 <script defer src="{{ asset('assets/js/beacon.js') }}"></script>
+
 
 <script src="{{ asset('assets/js/axios.min.js') }}"></script>
 
@@ -198,34 +211,11 @@ $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
 
     }
 
-    {{--function showConfirmationDialog() {--}}
-    {{--    Swal.fire({--}}
-    {{--        title: 'Confirm Addition?',--}}
-    {{--        text: "This action is irreversible. Make sure all details are captured correctly!",--}}
-    {{--        icon: 'warning',--}}
-    {{--        showCancelButton: true,--}}
-    {{--        confirmButtonColor: '#3085d6',--}}
-    {{--        cancelButtonColor: '#d33',--}}
-    {{--        confirmButtonText: 'Yes, submit it!',--}}
-    {{--        cancelButtonText: 'Cancel'--}}
-    {{--    }).then((result) => {--}}
-    {{--        if (result.isConfirmed) {--}}
-    {{--            // If the user clicks "Yes," submit the form--}}
-    {{--            document.getElementById('studentAdmissionForm').submit();--}}
-    {{--        } else {--}}
-    {{--            window.location.href = "{{ route('school.student.admission') }}";--}}
-    {{--        }--}}
-    {{--    });--}}
-    {{--}--}}
-
-    // Attach the confirmation dialog to the form submission
-    // document.getElementById('studentAdmissionForm').addEventListener('submit', function (e) {
-    //     e.preventDefault();
-    //     showConfirmationDialog();
-    // });
 </script>
 
-
+<script>
+    new DataTable('#example');
+</script>
 
 @include('sweetalert::alert')
 
