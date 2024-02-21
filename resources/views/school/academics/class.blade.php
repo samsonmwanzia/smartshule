@@ -11,7 +11,7 @@
         </div>
         <div class="row">
             <div class="col-5">
-                <div class="card mb-5">
+                <div class="card mb-5 rounded-0">
                     <div class="card-body">
                         <h4>Add Class</h4>
                        <form method="post" action="{{ route('school.post.class') }}">
@@ -33,7 +33,7 @@
             <div class="col-7">
                 <div id="bootstrapTable" class="mb-5">
 
-                    <div class="card">
+                    <div class="card rounded-0">
                         <div class="card-body">
                             <h4>School Classes</h4>
                             <div class="table-responsive">

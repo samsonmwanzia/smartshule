@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BomCategory;
+use App\Models\BOMmember;
+use App\Models\Book;
 use App\Models\ClassSection;
 use App\Models\Expense;
 use App\Models\ExpenseHead;
 use App\Models\Fee;
 use App\Models\FeeType;
 use App\Models\Form;
+use App\Models\IssueReturn;
 use App\Models\Notification;
 use App\Models\School;
 use App\Models\StaffCategory;
@@ -15,6 +19,8 @@ use App\Models\Statement;
 use App\Models\Student;
 use App\Models\StudentCategory;
 use App\Models\SubCounty;
+use App\Models\Subject;
+use App\Models\TeacherSubject;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -824,6 +830,412 @@ class SchoolController extends Controller
         alert()->success('success', 'Expense successfully added')->persistent('Okay');
         return redirect()->back();
     }
+
+    public function getTeachers()
+    {
+        $school = $this->loggedIn();
+        $name = "Teacher";
+        $category = $this->staffCategory($school->id, $name);
+
+        $teachers = $this->returnTeachers($school->id);
+
+        return view('school.academics.teacher', [
+            'school' => $school,
+            'category' => $category,
+            'teachers' => $teachers,
+        ]);
+    }
+
+    public function returnTeachers(int $school_id)
+    {
+        $name = "Teacher";
+        $category = $this->staffCategory($school_id, $name);
+
+        $teachers = User::query()
+            ->where('school_id', $school_id)
+            ->where('staff_category_id', $category->id)
+            ->get();
+
+        return $teachers;
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function postTeacher(Request $request)
+    {
+        $this->validate($request, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => 'required',
+            'gender' => ['required'],
+        ]);
+
+        User::query()->create([
+            'school_id' => decrypt($request->school_id),
+            'staff_category_id' => decrypt($request->staff_category_id),
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => (new PageController())->alignPhoneNumber($request->phone),
+            'gender' => $request->gender,
+            'password' => Hash::make($request->phone),
+
+        ]);
+
+        alert()->success('success', 'Teacher successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function getSubjects()
+    {
+        $school = $this->loggedIn();
+        $subjects = $this->returnSubjects();
+
+        return view('school.academics.subjects', [
+            'school' => $school,
+            'subjects' => $subjects,
+
+        ]);
+    }
+
+    public function returnSubjects()
+    {
+        return Subject::query()->get();
+
+    }
+
+
+    public function getAssignSubjects(Request $request)
+    {
+        $school = $this->loggedIn();
+        $classes = $this->getClasses();
+
+        $filterClass = isset($request->class_id) ? $request->class_id : 0;
+        $filterSection = isset($request->class_section_id) ? $request->class_section_id : 0;
+
+        $subjects = $this->returnSubjects();
+
+        $teachers = $this->returnTeachers($school->id);
+
+
+
+        return view('school.academics.assign_subjects', [
+            'school' => $school,
+            'classes' => $classes,
+            'subjects' => $subjects,
+            'filterClass' => $filterClass,
+            'filterSection' => $filterSection,
+            'teachers' => $teachers,
+
+        ]);
+    }
+
+    public function selectedTeacher(int $school_id, int $class_id, int $class_section, int $subject_id, int $teacher_id)
+    {
+        $selectedTeacher = TeacherSubject::query()
+            ->where('school_id', $school_id)
+            ->where('class_id', $class_id)
+            ->where('class_section_id', $class_section)
+            ->where('subject_id', $subject_id)
+            ->where('teacher_id', $teacher_id)
+            ->first();
+
+        if ($selectedTeacher){
+            return $selectedTeacher->teacher_id;
+        }
+        return null;
+    }
+
+    public function postAssignSubjects(Request $request)
+    {
+        $school = $this->loggedIn();
+
+        foreach ($request->all() as $key => $value) {
+            if (str_starts_with($key, 'teacher')) {
+                $code = substr($key, strlen('teacher'));
+                $subject = Subject::where('code', $code)->first();
+
+                // Check if teacher_id is not empty
+                $teacherId = $request->input("teacher{$code}");
+                if (!empty($teacherId) && $subject) {
+                    TeacherSubject::query()->insert([
+                        'school_id' => $school->id,
+                        'class_id' => decrypt($request->class_id),
+                        'class_section_id' => decrypt($request->class_section_id),
+                        'teacher_id' => $teacherId,
+                        'subject_id' => $subject->id,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+            }
+        }
+
+        alert()->success('success', 'Subjects successfully assigned')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function getBomCategories()
+    {
+        $school = $this->loggedIn();
+        $categories = BomCategory::query()->where('school_id', $school->id)->get();
+
+        return view('school.academics.bom_categories', [
+            'school' => $school,
+            'categories' => $categories,
+
+        ]);
+    }
+
+    public function postBomCategories(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+        ]);
+
+        BomCategory::query()->create([
+            'school_id' => $request->school_id,
+            'name' => $request->name,
+
+        ]);
+
+        alert()->success('success', 'Bom category successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function getBomMembers()
+    {
+        $school = $this->loggedIn();
+        $categories = BomCategory::query()->where('school_id', $school->id)->get();
+
+        $members = [];
+
+        foreach ($categories as $category) {
+            $categoryMembers = BOMmember::where('category_id', $category->id)->get();
+            $members[$category->id] = $categoryMembers;
+        }
+
+
+        return view('school.academics.bom_members', [
+            'school' => $school,
+            'categories' => $categories,
+            'members' => $members,
+
+        ]);
+    }
+
+    public function postBomMembers(Request $request)
+    {
+
+        $this->validate($request, [
+            'category_id' => 'required|not_in:0',
+            'full_name' => 'required',
+            'gender' => 'required|not_in:0',
+            'age' => 'required',
+            'academic_qualification' => 'required',
+            'current_employment' => 'required',
+        ]);
+
+        BOMmember::query()->create([
+            'school_id' => decrypt($request->school_id),
+            'category_id' => $request->category_id,
+            'name' => $request->full_name,
+            'gender' => $request->gender,
+            'age' => $request->age,
+            'academic_qualification' => $request->academic_qualification,
+            'current_employment' => $request->current_employment,
+        ]);
+
+        alert()->success('success', 'Bom member successfully added')->persistent('Okay');
+        return redirect()->back();
+
+    }
+
+    public function getLibrarians()
+    {
+        $school = $this->loggedIn();
+        $name = "Librarian";
+        $category = $this->staffCategory($school->id, $name);
+
+        $librarians = $this->returnLibrarians($school->id);
+
+        return view('school.library.librarians', [
+            'school' => $school,
+            'category' => $category,
+            'librarians' => $librarians,
+        ]);
+    }
+
+    public function postLibrarian(Request $request)
+    {
+        $this->validate($request, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => 'required',
+            'gender' => ['required'],
+        ]);
+
+        User::query()->create([
+            'school_id' => decrypt($request->school_id),
+            'staff_category_id' => decrypt($request->staff_category_id),
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => (new PageController())->alignPhoneNumber($request->phone),
+            'gender' => $request->gender,
+            'password' => Hash::make($request->phone),
+
+        ]);
+
+        alert()->success('success', 'Librarian successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function returnLibrarians(int $school_id)
+    {
+        $name = "Librarian";
+        $category = $this->staffCategory($school_id, $name);
+
+        $librarians = User::query()
+            ->where('school_id', $school_id)
+            ->where('staff_category_id', $category->id)
+            ->get();
+
+        return $librarians;
+    }
+
+    public function getBookList()
+    {
+        $school = $this->loggedIn();
+        $subjects = $this->returnSubjects();
+        $librarians = $this->returnLibrarians($school->id);
+        $books = $this->returnBooks($school->id);
+
+        return view('school.library.book_list', [
+            'school' => $school,
+            'subjects' => $subjects,
+            'librarians' => $librarians,
+            'books' => $books,
+        ]);
+    }
+
+    public function postBook(Request $request)
+    {
+        $this->validate($request, [
+            'subject_id' => 'required|not_in:0',
+            'book_title' => ['required', 'string', 'max:255'],
+            'book_number' => ['required', 'string', 'max:255'],
+            'quantity' => 'required',
+            'publisher' => ['required', 'string', 'max:255'],
+            'price' => 'required',
+        ]);
+
+        Book::query()->create([
+            'school_id' => decrypt($request->school_id),
+            'subject_id' =>$request->subject_id,
+            'book_title' => $request->book_title,
+            'book_number' => $request->book_number,
+            'quantity' => $request->quantity,
+            'publisher' => $request->publisher,
+            'price' => $request->price,
+
+        ]);
+
+        alert()->success('success', 'Book successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function returnBooks(int $school_id)
+    {
+        $books = Book::query()->where('school_id', $school_id)->with('subject')->get();
+        if ($books) {
+            return $books;
+        }
+        return null;
+
+    }
+
+    public function getIssueReturn()
+    {
+        $school = $this->loggedIn();
+        $subjects = $this->returnSubjects();
+        $librarians = $this->returnLibrarians($school->id);
+        $books = $this->returnBooks($school->id);
+        $staffs = $this->returnStaff($school->id);
+        $students = $this->returnStudents($school->id);
+        $issueReturns = IssueReturn::query()->where('school_id', $school->id)->get();
+
+        return view('school.library.issue_return', [
+            'school' => $school,
+            'subjects' => $subjects,
+            'librarians' => $librarians,
+            'books' => $books,
+            'staffs' => $staffs,
+            'students' => $students,
+            'issueReturns' => $issueReturns,
+        ]);
+    }
+
+    public function returnStaff(int $school_id)
+    {
+        $staffs = User::query()->where('school_id', $school_id)->get();
+        if ($staffs)
+        {
+            return $staffs;
+        }
+        return null;
+    }
+
+    public function returnStudents(int $school_id)
+    {
+        $students = Student::query()
+            ->where('school_id', $school_id)
+            ->with('form')
+            ->with('stream')
+            ->get();
+
+        if ($students)
+        {
+            return $students;
+        }
+        return null;
+    }
+
+    public function postIssueReturn(Request $request)
+    {
+        $this->validate($request, [
+            'book_id' => 'required|not_in:0',
+            'is_staff' => 'required',
+            'student_id' => '',
+            'staff_id' => '',
+            'issue_date' =>  'required',
+            'return_date' => 'required',
+        ]);
+
+        IssueReturn::query()->create([
+            'school_id' => decrypt($request->school_id),
+            'issued_by' => decrypt($request->school_id),
+            'book_id' => $request->book_id,
+            'is_staff' => $request->is_staff,
+            'issued_to' => $request->staff_id ? $request->staff_id : $request->student_id,
+            'issued_date' => $request->issue_date,
+            'return_date' => $request->return_date,
+
+        ]);
+        alert()->success('success', 'Book issued successfully')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function returnIssuedBook(int $id)
+    {
+        $school = $this->loggedIn();
+        $issue = IssueReturn::query()->where('school_id', $school->id)->where('id', $id)->first();
+        $issue->is_returned = 1;
+        $issue->update();
+        alert()->success('success', 'Book has been marked as returned.')->persistent('Okay');
+        return redirect()->back();
+
+    }
+
 
 
 

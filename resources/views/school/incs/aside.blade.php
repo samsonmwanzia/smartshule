@@ -140,48 +140,53 @@
                     <span class="menu-caret"><b class="caret"></b></span>
                 </a>
                 <div class="menu-submenu">
-                    <div class="menu-item">
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/timetable') ? 'active' : '' }}">
                         <a href="#" class="menu-link">
                             <span class="menu-text">Class Timetable</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/assignSubjects') ? 'active' : '' }}">
+                        <a href="{{ route('school.academics.assignSubjects') }}" class="menu-link">
                             <span class="menu-text">Assign Subjects</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/subjects') ? 'active' : '' }}">
+                        <a href="{{ route('school.academics.subjects') }}" class="menu-link">
                             <span class="menu-text">Subjects </span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/teachers') ? 'active' : '' }}">
+                        <a href="{{ route('school.academics.teachers') }}" class="menu-link">
                             <span class="menu-text">Teacher </span>
                         </a>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/classes') ? 'active' : '' }}">
                         <a href="{{ route('school.class') }}" class="menu-link">
                             <span class="menu-text">Class</span>
                         </a>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/streams') ? 'active' : '' }}">
                         <a href="{{ route('school.stream') }}" class="menu-link">
                             <span class="menu-text">Stream</span>
                         </a>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/others') ? 'active' : '' }}">
                         <a href="#" class="menu-link">
                             <span class="menu-text">Other Workers</span>
                         </a>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/staffCategories') ? 'active' : '' }}">
                         <a href="{{ route('school.staff.category') }}" class="menu-link">
                             <span class="menu-text">Staff Categories</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/bomCategories') ? 'active' : '' }}">
+                        <a href="{{ route('school.academics.bomCategories') }}" class="menu-link">
+                            <span class="menu-text">BOM Categories</span>
+                        </a>
+                    </div>
+                    <div class="menu-item {{ request()->is('smartshule/school/academics/bomMembers') ? 'active' : '' }}">
+                        <a href="{{ route('school.academics.bomMembers') }}" class="menu-link">
                             <span class="menu-text">BOM Members</span>
                         </a>
                     </div>
@@ -236,30 +241,25 @@
                     </div>
                 </div>
             </div>
-            <div class="menu-item has-sub">
+            <div class="menu-item has-sub {{ request()->is('smartshule/school/library/*') ? 'active' : '' }}">
                 <a href="#" class="menu-link">
                     <span class="menu-icon"><i class="fa fa-book"></i></span>
                     <span class="menu-text">Library </span>
                     <span class="menu-caret"><b class="caret"></b></span>
                 </a>
                 <div class="menu-submenu">
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
-                            <span class="menu-text">Add Book</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/library/bookList') ? 'active' : '' }}">
+                        <a href="{{ route('school.library.bookList') }}" class="menu-link">
                             <span class="menu-text">Book List</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/library/issueReturn') ? 'active' : '' }}">
+                        <a href="{{ route('school.library.issueReturn') }}" class="menu-link">
                             <span class="menu-text">Issue Return </span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/library/librarians') ? 'active' : '' }}" >
+                        <a href="{{ route('school.library.librarians') }}" class="menu-link">
                             <span class="menu-text">Librarians </span>
                         </a>
                     </div>

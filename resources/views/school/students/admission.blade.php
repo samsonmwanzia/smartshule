@@ -230,7 +230,7 @@
                             </div>
                         </div>
                         <h4>Parent Guardian Details</h4>
-                        <div class="card mb-3">
+                        <div class="card mb-3 rounded-0">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="alert alert-primary">For this section either father, mother or guardian should be provided</div>
@@ -453,7 +453,7 @@
                                             <textarea class="form-control" name="brief_history" rows="5">{{ old('brief_history') }}</textarea>
                                             <span class="text-danger"></span>
                                         </div>
-                                        <button type="submit" class="btn btn-primary float-end"
+                                        <button type="submit" class="btn btn-primary float-end rounded-0"
                                                 >Submit Information</button>
                                     </div>
 

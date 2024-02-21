@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-xl-12">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">STAFF  INFORMATION</a></li>
+                    <li class="breadcrumb-item"><a href="#">BOM INFORMATION</a></li>
                 </ul>
             </div>
         </div>
@@ -13,8 +13,8 @@
             <div class="col-5">
                 <div class="card mb-5">
                     <div class="card-body">
-                        <h4>Add staff category</h4>
-                        <form method="post" action="{{ route('school.staff.category.post') }}">
+                        <h4>Add BOM category</h4>
+                        <form method="post" action="{{ route('school.academics.bomCategories.post') }}">
                             @csrf
                             <div class="mb-3">
                                 <input type="hidden" name="school_id"  value="{{ $school->id }}">
@@ -35,7 +35,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h4>School staff categories</h4>
+                            <h4>School BOM categories</h4>
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped">
                                     <thead>
@@ -74,5 +74,6 @@
 
     </div>
 @endsection
+
 
 

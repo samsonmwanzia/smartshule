@@ -1,7 +1,7 @@
 <?php
 $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
 ?>
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -12,13 +12,9 @@ $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
 
     <link href="{{ asset('assets/css/vendor.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet">
-
-    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-
-{{--    <link href="{{ asset('assets/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet">--}}
-{{--    <link href="{{ asset('assets/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet">--}}
-{{--    <link href="{{ asset('assets/plugins/datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5.min.css') }}" rel="stylesheet">--}}
-{{--    <link href="{{ asset('assets/plugins/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet">--}}
+    <link href="{{ asset('assets/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet">
+</head>
 
 </head>
 <body>
@@ -37,13 +33,13 @@ $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
 
         <div class="brand">
             <div class="desktop-toggler">
-                <button type="button" class="menu-toggler" data-toggle="sidebar-minify">
+                <button type="button" class="menu-toggler text-theme" data-toggle="sidebar-minify">
                     <span class="bar"></span>
                     <span class="bar"></span>
                 </button>
             </div>
-            <a href="index-2.html" class="brand-logo">
-                <img src="{{ asset('assets/img/logo.png') }}" class="invert-dark" alt height="20">
+            <a href="{{ route('school.dashboard') }}" class="brand-logo">
+                <h2 class="text-theme">{{ env('APP_NAME') }}</h2>
             </a>
         </div>
 
@@ -79,6 +75,7 @@ $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
 
 
 <script src="{{ asset('assets/js/axios.min.js') }}"></script>
+<script src="{{ asset('assets/js/select2.min.js') }}"></script>
 
 <script>
     function classSections() {
@@ -211,11 +208,44 @@ $school = (new \App\Http\Controllers\SchoolController())->loggedIn();
 
     }
 
+    new DataTable('#example');
+
+    $(document).ready(function() {
+        $('#select2Dropdown').select2();
+        $('#selectStudent').select2();
+        $('#selectStaff').select2();
+
+        adjustDisplay();
+
+        $('#select_user_type').on('change', function() {
+            adjustDisplay();
+        });
+
+        function adjustDisplay() {
+            var select_user_type = $('#select_user_type').val();
+            if (select_user_type == 0) {
+                $('#staff_block').hide();
+                $('#student_block').show();
+            } else if(select_user_type == 1){
+                $('#staff_block').show();
+                $('#student_block').hide();
+            } else {
+                $('#student_block').hide();
+                $('#staff_block').hide();
+            }
+        }
+    });
+
 </script>
 
-<script>
-    new DataTable('#example');
-</script>
+
+@if ($errors->any())
+    <script>
+        $(window).on('load', function() {
+            $('#modal').modal('show');
+        });
+    </script>
+@endif
 
 @include('sweetalert::alert')
 
