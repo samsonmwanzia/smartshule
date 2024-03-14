@@ -192,15 +192,15 @@
                     </div>
                 </div>
             </div>
-            <div class="menu-item has-sub">
+            <div class="menu-item has-sub {{ request()->is('smartshule/school/examination/*') ? 'active' : '' }}">
                 <a href="#" class="menu-link">
                     <span class="menu-icon"><i class="fa fa-file-alt"></i></span>
                     <span class="menu-text">Examinations</span>
                     <span class="menu-caret"><b class="caret"></b></span>
                 </a>
                 <div class="menu-submenu">
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/examination/list') ? 'active' : '' }}">
+                        <a href="{{ route('school.examination.list') }}" class="menu-link">
                             <span class="menu-text">Exam List</span>
                         </a>
                     </div>
@@ -214,13 +214,13 @@
                             <span class="menu-text">Exam Schedule</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/examination/marks') ? 'active' : '' }}">
+                        <a href="{{ route('school.examination.marks') }}" class="menu-link">
                             <span class="menu-text">Add Marks</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/examination/marksGrade') ? 'active' : '' }}">
+                        <a href="{{ route('school.examination.marksGrade') }}" class="menu-link">
                             <span class="menu-text">Marks Grade</span>
                         </a>
                     </div>
@@ -265,26 +265,21 @@
                     </div>
                 </div>
             </div>
-            <div class="menu-item has-sub">
+            <div class="menu-item has-sub {{ request()->is('smartshule/school/inventory/*') ? 'active' : '' }}">
                 <a href="#" class="menu-link">
                     <span class="menu-icon"><i class="fa fa-list"></i></span>
                     <span class="menu-text">Inventory </span>
                     <span class="menu-caret"><b class="caret"></b></span>
                 </a>
                 <div class="menu-submenu">
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/inventory/itemCategories') ? 'active' : '' }}">
+                        <a href="{{ route('school.inventory.itemCategories') }}" class="menu-link">
                             <span class="menu-text">Item Category</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/inventory/itemList') ? 'active' : '' }}">
+                        <a href="{{ route('school.inventory.itemList') }}" class="menu-link">
                             <span class="menu-text">Add Item</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
-                            <span class="menu-text">Update Item Stock</span>
                         </a>
                     </div>
                 </div>
@@ -313,20 +308,20 @@
                     </div>
                 </div>
             </div>
-            <div class="menu-item has-sub">
+            <div class="menu-item has-sub {{ request()->is('smartshule/school/transport/*') ? 'active' : '' }}">
                 <a href="#" class="menu-link">
                     <span class="menu-icon"><i class="fa fa-bus"></i></span>
                     <span class="menu-text">Transport</span>
                     <span class="menu-caret"><b class="caret"></b></span>
                 </a>
                 <div class="menu-submenu">
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/transport/vehicleRoute') ? 'active' : '' }}">
+                        <a href="{{ route('school.transport.vehicle_route') }}" class="menu-link">
                             <span class="menu-text">Routes</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/transport/vehicles') ? 'active' : '' }}">
+                        <a href="{{ route('school.transport.vehicle') }}" class="menu-link">
                             <span class="menu-text">Vehicles</span>
                         </a>
                     </div>

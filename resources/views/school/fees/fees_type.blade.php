@@ -22,7 +22,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Type Name</label>
                                 <input type="text"
-                                       class="form-control form-control-lg fs-15px @error('fee_type') is-invalid @enderror"
+                                       class="form-control  @error('fee_type') is-invalid @enderror"
                                        value="{{ old('fee_type') }}" name="fee_type" placeholder="">
                                 @error('fee_type')
                                 <span class="invalid-feedback" role="alert">
@@ -33,7 +33,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Amount</label>
                                 <input type="number"
-                                       class="form-control form-control-lg fs-15px @error('total_amount') is-invalid @enderror"
+                                       class="form-control  @error('total_amount') is-invalid @enderror"
                                        value="{{ old('total_amount') }}" name="total_amount" placeholder="">
                                 @error('total_amount')
                                 <span class="invalid-feedback" role="alert">

@@ -13,7 +13,6 @@
                 @include('school.incs.search_subjects')
 
                 @if($filterClass != 0 && $filterSection != 0)
-
                     <div class="card mt-3 p-3 rounded-0">
                         <form method="post" action="{{ route('school.academics.assignSubjects.post') }}">
                             <input type="hidden" name="class_id" value="{{ encrypt($filterClass) }}">

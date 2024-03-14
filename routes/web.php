@@ -240,7 +240,7 @@ Route::prefix('smartshule/school/')->group(function () {
         'as' => 'school.academics.assignSubjects',
     ]);
 
-    Route::post('/academics/assignSubjects', [
+    Route::post('/academics/assignSubjects/post', [
         'uses' => 'App\Http\Controllers\SchoolController@postAssignSubjects',
         'as' => 'school.academics.assignSubjects.post',
     ]);
@@ -270,7 +270,7 @@ Route::prefix('smartshule/school/')->group(function () {
         'as' => 'school.library.librarians',
     ]);
 
-    Route::post('/academics/bomMembers', [
+    Route::post('/library/librarians', [
         'uses' => 'App\Http\Controllers\SchoolController@postLibrarian',
         'as' => 'school.library.librarians.post',
     ]);
@@ -299,6 +299,79 @@ Route::prefix('smartshule/school/')->group(function () {
         'uses' => 'App\Http\Controllers\SchoolController@returnIssuedBook',
         'as' => 'school.library.returned',
     ]);
+
+    Route::get('/inventory/itemCategories', [
+        'uses' => 'App\Http\Controllers\SchoolController@getItemCategories',
+        'as' => 'school.inventory.itemCategories',
+    ]);
+
+    Route::post('/inventory/itemCategories', [
+        'uses' => 'App\Http\Controllers\SchoolController@postItemCategories',
+        'as' => 'school.inventory.itemCategories.post',
+    ]);
+
+    Route::get('/inventory/itemList', [
+        'uses' => 'App\Http\Controllers\SchoolController@getItemList',
+        'as' => 'school.inventory.itemList',
+    ]);
+
+    Route::post('/inventory/itemList', [
+        'uses' => 'App\Http\Controllers\SchoolController@postItem',
+        'as' => 'school.inventory.item.post',
+    ]);
+
+    Route::get('/transport/vehicleRoute', [
+        'uses' => 'App\Http\Controllers\SchoolController@getVehicleRoute',
+        'as' => 'school.transport.vehicle_route',
+    ]);
+
+    Route::post('/transport/vehicleRoute', [
+        'uses' => 'App\Http\Controllers\SchoolController@postVehicleRoute',
+        'as' => 'school.transport.vehicle_route.post',
+    ]);
+
+    Route::get('/transport/vehicles', [
+        'uses' => 'App\Http\Controllers\SchoolController@getVehicles',
+        'as' => 'school.transport.vehicle',
+    ]);
+
+    Route::post('/transport/vehicles', [
+        'uses' => 'App\Http\Controllers\SchoolController@postVehicle',
+        'as' => 'school.transport.vehicle.post',
+    ]);
+
+    Route::get('/examination/list', [
+        'uses' => 'App\Http\Controllers\SchoolController@getExaminationList',
+        'as' => 'school.examination.list',
+    ]);
+
+    Route::post('/examination/list', [
+        'uses' => 'App\Http\Controllers\SchoolController@postExamination',
+        'as' => 'school.examination.post',
+    ]);
+
+    Route::get('/examination/marksGrade', [
+        'uses' => 'App\Http\Controllers\SchoolController@getMarksGrade',
+        'as' => 'school.examination.marksGrade',
+    ]);
+
+    Route::post('/examination/marksGrade', [
+        'uses' => 'App\Http\Controllers\SchoolController@postMarksGrade',
+        'as' => 'school.examination.marksGrade.post',
+    ]);
+
+    Route::post('/examination/markingType', [
+        'uses' => 'App\Http\Controllers\SchoolController@postMarkingType',
+        'as' => 'school.examination.markingType',
+    ]);
+
+    Route::get('/examination/marks', [
+        'uses' => 'App\Http\Controllers\SchoolController@getRecordMarks',
+        'as' => 'school.examination.marks',
+    ]);
+
+
+
 
 
 });

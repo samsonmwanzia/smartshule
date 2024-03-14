@@ -23,7 +23,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
                                 <input type="text"
-                                       class="form-control form-control-lg fs-15px @error('name') is-invalid @enderror"
+                                       class="form-control  @error('name') is-invalid @enderror"
                                        value="{{ old('name') }}" name="name" placeholder="">
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
@@ -34,7 +34,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email"
-                                       class="form-control form-control-lg fs-15px @error('email') is-invalid @enderror"
+                                       class="form-control  @error('email') is-invalid @enderror"
                                        value="{{ old('email') }}" name="email" placeholder="">
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
@@ -45,7 +45,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Phone</label>
                                 <input type="number"
-                                       class="form-control form-control-lg fs-15px @error('phone') is-invalid @enderror"
+                                       class="form-control  @error('phone') is-invalid @enderror"
                                        value="{{ old('phone') }}" name="phone" placeholder="">
                                 @error('phone')
                                 <span class="invalid-feedback" role="alert">

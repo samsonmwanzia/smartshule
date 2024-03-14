@@ -7,17 +7,17 @@
 
             <div class="login-content">
                 <form action="{{ route('login') }}" method="POST" name="login_form">
-                    <h1 class="text-center">Sign In</h1>
+                    <h2 class="text-center border-bottom mb-2">Sign In</h2>
                     <div class="mb-3">
                         <label class="form-label">Username</label>
-                        <input type="text" class="form-control form-control-lg fs-15px" value placeholder="username@address.com">
+                        <input type="text" class="form-control fs-15px" value placeholder="">
                     </div>
                     <div class="mb-3">
                         <div class="d-flex">
                             <label class="form-label">Password</label>
                             <a href="#" class="ms-auto text-muted">Forgot password?</a>
                         </div>
-                        <input type="password" class="form-control form-control-lg fs-15px" value placeholder="Enter your password">
+                        <input type="password" class="form-control  fs-15px" value placeholder="">
                     </div>
                     <div class="mb-3">
                         <div class="form-check">

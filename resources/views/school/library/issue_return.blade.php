@@ -109,7 +109,7 @@
 
             <div class="col-8">
                 <div id="bootstrapTable" class="mb-5">
-                    <div class="card">
+                    <div class="card rounded-0">
                         <div class="card-header bg-none">
                             <h5 class="text-theme">ISSUE RETURNS LIST</h5>
                         </div>

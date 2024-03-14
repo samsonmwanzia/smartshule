@@ -6,12 +6,17 @@ use App\Models\BomCategory;
 use App\Models\BOMmember;
 use App\Models\Book;
 use App\Models\ClassSection;
+use App\Models\Exam;
 use App\Models\Expense;
 use App\Models\ExpenseHead;
 use App\Models\Fee;
 use App\Models\FeeType;
 use App\Models\Form;
 use App\Models\IssueReturn;
+use App\Models\Item;
+use App\Models\ItemCategory;
+use App\Models\MarkingType;
+use App\Models\MarksGrade;
 use App\Models\Notification;
 use App\Models\School;
 use App\Models\StaffCategory;
@@ -22,6 +27,8 @@ use App\Models\SubCounty;
 use App\Models\Subject;
 use App\Models\TeacherSubject;
 use App\Models\User;
+use App\Models\Vehicle;
+use App\Models\VehicleRoute;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -1236,7 +1243,317 @@ class SchoolController extends Controller
 
     }
 
+    public function getItemCategories()
+    {
+        $school = $this->loggedIn();
+        $categories = $this->returnItemCategories($school->id);
+
+        return view('school.inventory.item_category', [
+            'school' => $school,
+            'categories' => $categories,
+
+        ]);
+
+    }
+
+    public function postItemCategories(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+        ]);
+
+        ItemCategory::query()->create([
+            'school_id' => $request->school_id,
+            'name' => $request->name,
+
+        ]);
+
+        alert()->success('success', 'Item category successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function returnItemCategories(int $school_id)
+    {
+        $itemCategories = ItemCategory::query()->where('school_id', $school_id)->get();
+        if ($itemCategories) {
+            return $itemCategories;
+        }
+        return null;
+
+    }
 
 
+
+    public function getItemList()
+    {
+        $school = $this->loggedIn();
+        $categories = $this->returnItemCategories($school->id);
+        $items = Item::query()->where('school_id', $school->id)->with('category')->get();
+
+        return view('school.inventory.add_item', [
+            'school' => $school,
+            'items' => $items,
+            'categories' => $categories,
+        ]);
+    }
+
+    public function postItem(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'category' => 'required|not_in:0',
+            'description' => 'required',
+            'quantity' => 'required',
+            'price' => 'required',
+        ]);
+
+        Item::query()->create([
+            'school_id' => decrypt($request->school_id),
+            'item_category_id' => $request->category,
+            'name' => $request->name,
+            'description' => $request->description,
+            'quantity' => $request->quantity,
+            'price' => $request->price,
+
+        ]);
+
+        alert()->success('success', 'Item successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function getVehicleRoute()
+    {
+        $school = $this->loggedIn();
+        $routes = $this->returnVehicleRoutes($school->id);
+
+        return view('school.transport.vehicle_routes', [
+            'school' => $school,
+            'routes' => $routes,
+        ]);
+    }
+
+
+    public function returnVehicleRoutes(int $school_id)
+    {
+        $routes = VehicleRoute::query()->where('school_id', $school_id)->get();
+        if ($routes) {
+            return $routes;
+        }
+        return null;
+
+    }
+
+    public function postVehicleRoute(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+        ]);
+
+        VehicleRoute::query()->create([
+            'school_id' => $request->school_id,
+            'name' => $request->name,
+
+        ]);
+
+        alert()->success('success', 'Vehicle Route successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+
+    public function getVehicles()
+    {
+        $school = $this->loggedIn();
+        $vehicles = $this->returnVehicles($school->id);
+
+        return view('school.transport.vehicles', [
+            'school' => $school,
+            'vehicles' => $vehicles,
+        ]);
+    }
+
+
+    public function returnVehicles(int $school_id)
+    {
+        $vehicles = Vehicle::query()->where('school_id', $school_id)->get();
+        if ($vehicles) {
+            return $vehicles;
+        }
+        return null;
+
+    }
+
+    public function postVehicle(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+        ]);
+
+        Vehicle::query()->create([
+            'school_id' => $request->school_id,
+            'name' => $request->name,
+
+        ]);
+
+        alert()->success('success', 'Vehicle successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function getExaminationList()
+    {
+        $school = $this->loggedIn();
+        $exams = $this->returnExaminationList($school->id);
+
+        return view('school.examination.exam_list', [
+            'school' => $school,
+            'exams' => $exams,
+        ]);
+    }
+
+    public function returnExaminationList(int $school_id)
+    {
+        $exams = Exam::query()->where('school_id', $school_id)->get();
+        if ($exams) {
+            return $exams;
+        }
+        return null;
+
+    }
+
+
+    public function postExamination(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'description' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+        ]);
+
+        Exam::query()->create([
+            'school_id' => decrypt($request->school_id),
+            'name' => $request->name,
+            'note' => $request->description,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+
+        ]);
+
+        alert()->success('success', 'Exam successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function getMarksGrade()
+    {
+        $school = $this->loggedIn();
+        $grades = $this->returnMarksGrade($school->id);
+        $types = $this->returnMarkingType($school->id);
+
+        return view('school.examination.marks_grade', [
+            'school' => $school,
+            'grades' => $grades,
+            'types' => $types,
+        ]);
+    }
+
+    public function postMarkingType(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+        ]);
+
+        MarkingType::query()->create([
+            'school_id' => decrypt($request->school_id),
+            'name' => $request->name,
+
+        ]);
+
+        alert()->success('success', 'Exam marking Type successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+
+    public function postMarksGrade(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'percentage_from' => 'required',
+            'percentage_to' => 'required',
+            'points' => 'required',
+            'marking_type' => 'required|not_in:0',
+        ]);
+
+        MarksGrade::query()->create([
+            'school_id' => decrypt($request->school_id),
+            'name' => $request->name,
+            'percentage_from' => $request->percentage_from,
+            'percentage_to' => $request->percentage_to,
+            'points' => $request->points,
+            'marking_type' => $request->marking_type,
+
+        ]);
+
+        alert()->success('success', 'Exam Grade successfully added')->persistent('Okay');
+        return redirect()->back();
+    }
+
+
+    public function returnMarksGrade(int $school_id)
+    {
+        $grades = MarksGrade::query()->where('school_id', $school_id)->get();
+        if ($grades) {
+            return $grades;
+        }
+        return null;
+
+    }
+
+    public function returnMarkingType(int $school_id)
+    {
+        $types = MarkingType::query()->where('school_id', $school_id)->get();
+        if ($types) {
+            return $types;
+        }
+        return null;
+
+    }
+
+
+    public function getRecordMarks(Request $request)
+    {
+        $school = $this->loggedIn();
+        $classes = $this->getClasses();
+        $exams = $this->returnExaminationList($school->id);
+
+        $filterExam = isset($request->exam_id) ? $request->exam_id : 0;
+        $filterClass = isset($request->class_id) ? $request->class_id : 0;
+        $filterSection = isset($request->class_section_id) ? $request->class_section_id : 0;
+
+        $students = [];
+        if (isset($filterClass) && $filterSection) {
+            $studentsResult = Student::query()
+                ->where('class_id', $filterClass)
+                ->where('class_section_id', $filterSection)
+                ->with('form')
+                ->with('stream')
+                ->get();
+
+            $students = $studentsResult;
+
+        }
+
+        $subjects = $this->returnSubjects();
+
+        return view('school.examination.add_marks', [
+            'school' => $school,
+            'exams' => $exams,
+            'classes' => $classes,
+            'students' => $students,
+            'filterExam' => $filterExam,
+            'filterClass' => $filterClass,
+            'filterSection' => $filterSection,
+            'subjects' => $subjects,
+
+        ]);
+    }
 
 }

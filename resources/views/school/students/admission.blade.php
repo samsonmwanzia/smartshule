@@ -190,8 +190,31 @@
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
                                             <label for="ethnicity">Ethnicity<span class="text-danger">*</span></label>
-                                            <input id="ethnicity" name="ethnicity" placeholder="" type="text"
-                                                   class="form-control @error('ethnicity') is-invalid @enderror" value="{{ old('ethnicity') }}">
+                                            <select name="ethnicity" class="form-control @error('ethnicity') is-invalid @enderror" id="ethnicity" >
+                                                <option value="">--Select--</option>
+                                                <option value="Kisii" >Kisii</option>
+                                                <option value="Maasai" >Maasai</option>
+                                                <option value="Embu" >Embu</option>
+                                                <option value="Mijikenda" >Mijikenda</option>
+                                                <option value="Swahili" >Swahili</option>
+                                                <option value="Somali" >Somali</option>
+                                                <option value="Pokot" >Pokot</option>
+                                                <option value="Luhya" >Luhya</option>
+                                                <option value="Turkana" >Turkana</option>
+                                                <option value="Kalenjin" >Kalenjin</option>
+                                                <option value="Luo" >Luo</option>
+                                                <option value="Meru" >Meru</option>
+                                                <option value="Taita" >Taita</option>
+                                                <option value="Suba" >Suba</option>
+                                                <option value="Bantu" >Bantu</option>
+                                                <option value="Kamba">Kamba</option>
+                                                <option value="Samburu">Samburu</option>
+                                                <option value="Kikuyu" >Kikuyu</option>
+                                                <option value="Rendille" >Rendille</option>
+                                                <option value="El-molo" >El Molo</option>
+                                                <option value="Kuria" >Kuria</option>
+                                                <option value="Taveta" >Taveta</option>
+                                            </select>
                                             @error('ethnicity')
                                             <span class="invalid-feedback" role="alert">
                                                <strong class="text-danger">{{ $message }}</strong>
