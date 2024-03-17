@@ -14,25 +14,60 @@
 
                 @if($filterExam != 0 && $filterClass != 0)
                     <div class="card mt-2 p-3">
-                        <form method="post" action="">
-                            @csrf
-                            @foreach($students as $student)
-                                <div class="row">
-                                    <div class="col-xl-2">
-                                        <div class="form-group mb-3">
-                                            <label class="form-label"
-                                                   for="exampleFormControlInput1"><strong>{{ $student->firstname }} {{ $student->lastname }} [ {{ $student->admission_no }} ]</strong>
-                                            </label>
-                                            <input type="text" name="" class="form-control"
-                                                   value="{{ $student->id }}" readonly>
-                                        </div>
-                                    </div>
-                                    @foreach($subjects as $subject)
+                        <p class="alert alert-info"> Enter marks for <span
+                                class="text-danger"> {{ (new \App\Http\Controllers\SchoolController())->getSubjectFromId($filterSubject)->name }}</span> for the following students</p>
+                        <div class="table-responsive">
+                            <form method="post" action="{{ route('school.examination.marks.post') }}">
+                                @csrf
+                                <input type="hidden" name="exam_id" value="{{ encrypt($filterExam) }}">
+                                <input type="hidden" name="class_id" value="{{ encrypt($filterClass) }}">
+                                <input type="hidden" name="subject" value="{{ encrypt($filterSubject) }}">
+                                <table class="table table-hover table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Class</th>
+                                        <th>Admission Number</th>
+                                        <th>Student Name</th>
+                                        <th>Student Score</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $count = 1; ?>
+                                    @foreach($students as $student)
+                                        <tr>
+                                            <td>
+                                                {{ $count++ }}
+
+                                                <input type="hidden" name="student{{ $student->id }}" value="{{ $student->id }}">
+
+                                            </td>
+                                            <td>
+                                                {{ $student->stream->name }}
+                                            </td>
+                                            <td>
+                                                {{ $student->admission_no }}
+                                            </td>
+                                            <td>
+                                                {{ $student->firstname }} {{ $student->lastname }}
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <?php $score = (new \App\Http\Controllers\SchoolController())->studentScore($filterExam, $student->id, $filterSubject); ?>
+                                                    <input type="number" class="form-control" name="score{{$student->id}}" value="{{ $score ? $score->{$column} : '' }}">
+
+                                                </div>
+                                            </td>
+                                        </tr>
 
                                     @endforeach
-                            @endforeach
 
-                        </form>
+                                    </tbody>
+                                </table>
+                                <button type="submit" class="btn btn-primary rounded-0">Submit</button>
+                            </form>
+                        </div>
+
                     </div>
                 @endif
             </div>

@@ -204,16 +204,6 @@
                             <span class="menu-text">Exam List</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
-                            <span class="menu-text">Schedule Exam</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
-                            <span class="menu-text">Exam Schedule</span>
-                        </a>
-                    </div>
                     <div class="menu-item {{ request()->is('smartshule/school/examination/marks') ? 'active' : '' }}">
                         <a href="{{ route('school.examination.marks') }}" class="menu-link">
                             <span class="menu-text">Add Marks</span>
@@ -234,8 +224,8 @@
                             <span class="menu-text">Gender Analysis</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('smartshule/school/examination/classAnalysis') ? 'active' : '' }}">
+                        <a href="{{ route('school.examination.class.analysis') }}" class="menu-link">
                             <span class="menu-text">Class Analysis</span>
                         </a>
                     </div>

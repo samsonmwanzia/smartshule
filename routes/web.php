@@ -370,8 +370,15 @@ Route::prefix('smartshule/school/')->group(function () {
         'as' => 'school.examination.marks',
     ]);
 
+    Route::post('/examination/marks/post', [
+        'uses' => 'App\Http\Controllers\SchoolController@postRecordMarks',
+        'as' => 'school.examination.marks.post',
+    ]);
 
-
+    Route::get('/examination/classAnalysis', [
+        'uses' => 'App\Http\Controllers\SchoolController@getClassAnalysis',
+        'as' => 'school.examination.class.analysis',
+    ]);
 
 
 });

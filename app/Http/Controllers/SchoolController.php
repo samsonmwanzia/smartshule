@@ -7,6 +7,7 @@ use App\Models\BOMmember;
 use App\Models\Book;
 use App\Models\ClassSection;
 use App\Models\Exam;
+use App\Models\ExamResult;
 use App\Models\Expense;
 use App\Models\ExpenseHead;
 use App\Models\Fee;
@@ -1527,9 +1528,11 @@ class SchoolController extends Controller
         $filterExam = isset($request->exam_id) ? $request->exam_id : 0;
         $filterClass = isset($request->class_id) ? $request->class_id : 0;
         $filterSection = isset($request->class_section_id) ? $request->class_section_id : 0;
+        $filterSubject = isset($request->subject_id) ? $request->subject_id : 0;
 
         $students = [];
-        if (isset($filterClass) && $filterSection) {
+        $column = 0;
+        if ($filterClass && $filterSection && $filterSubject) {
             $studentsResult = Student::query()
                 ->where('class_id', $filterClass)
                 ->where('class_section_id', $filterSection)
@@ -1539,9 +1542,14 @@ class SchoolController extends Controller
 
             $students = $studentsResult;
 
+            $subject = $this->returnSubjectColumn($filterSubject);
+            $column = $subject->code.'_score';
+
         }
 
         $subjects = $this->returnSubjects();
+
+
 
         return view('school.examination.add_marks', [
             'school' => $school,
@@ -1552,8 +1560,144 @@ class SchoolController extends Controller
             'filterClass' => $filterClass,
             'filterSection' => $filterSection,
             'subjects' => $subjects,
+            'filterSubject' => $filterSubject,
+            'column' => $column,
 
         ]);
     }
+
+    public function getSubjectFromId(int $id)
+    {
+        $subject = Subject::query()->where('id', $id)->first();
+        if ($subject) {
+            return $subject;
+        }
+        return null;
+    }
+
+    public function postRecordMarks(Request $request)
+    {
+        $school = $this->loggedIn();
+
+        foreach ($request->all() as $key => $value) {
+            if (str_starts_with($key, 'student')) {
+                $student_id = substr($key, strlen('student'));
+                $student_score = $request['score'.$student_id];
+                $subject = $this->returnSubjectColumn(decrypt($request->subject));
+                $class_id = decrypt($request->class_id);
+                $exam_id = decrypt($request->exam_id);
+
+                $existingResult = ExamResult::where('exam_id', $exam_id)
+                    ->where('student_id', $student_id)
+                    ->first();
+
+
+                if ($existingResult) {
+                    $existingResult->{$subject->code.'_score'} = $student_score;
+                    $existingResult->updated_at = Carbon::now();
+                    $existingResult->save();
+                } else {
+                    // Insert new result
+                    ExamResult::query()->insert([
+                        'school_id' => $school->id,
+                        'exam_id' => $exam_id,
+                        'class_id' => $class_id,
+                        "{$subject->code}_score" => $student_score,
+                        'student_id' => $student_id,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+            }
+        }
+
+        alert()->success('success', 'Marks recorded successfully')->persistent('Okay');
+        return redirect()->back();
+    }
+
+    public function studentScore(int $exam_id, int $student_id, int $subject_id)
+    {
+        $subject = Subject::query()->where('id', $subject_id)->first();
+
+        $studentScore = ExamResult::query()
+            ->where('exam_id', $exam_id)
+            ->where('student_id', $student_id)
+            ->first();
+
+        if ($studentScore){
+            return $studentScore;
+        }
+        return null;
+    }
+
+    public function returnSubjectColumn(int $subject_id)
+    {
+        $subject = Subject::query()->where('id', $subject_id)->first();
+
+        if ($subject) {
+            return $subject;
+        }
+
+        return null;
+    }
+
+    public function getClassAnalysis(Request $request)
+    {
+        $school = $this->loggedIn();
+        $exams = $this->returnExaminationList($school->id);
+        $classes = $this->getClasses();
+
+        $grades = $this->returnMarksGrade($school->id);
+        $types = $this->returnMarkingType($school->id);
+
+        $filterExam = isset($request->exam_id) ? $request->exam_id : 0;
+        $filterClass = isset($request->class_id) ? $request->class_id : 0;
+
+        $subjects = $this->returnClassSubjects($school->id, $filterClass) ;
+
+        $results = $this->returnClassResults($school->id, $filterExam, $filterClass);
+
+        return view('school.examination.class_analysis', [
+            'school' => $school,
+            'exams' => $exams,
+            'classes' => $classes,
+            'filterExam' => $filterExam,
+            'filterClass' => $filterClass,
+            'grades' => $grades,
+            'types' => $types,
+            'subjects' => $subjects,
+            'results' => $results,
+        ]);
+    }
+
+    public function returnClassSubjects(int $school_id, int $class_id)
+    {
+        $classSubjects =  TeacherSubject::query()
+            ->where('school_id', $school_id)
+            ->where('class_id', $class_id)
+            ->get();
+
+        if ($classSubjects) {
+            return $classSubjects;
+        }
+        return null;
+
+    }
+
+    public function returnClassResults(int $school_id, int $exam_id, int $class_id)
+    {
+        $results = ExamResult::query()
+            ->where('school_id', $school_id)
+            ->where('exam_id', $exam_id)
+            ->where('class_id', $class_id)
+            ->with('student')
+            ->get();
+        if ($results) {
+            return $results;
+        }
+
+        return null;
+    }
+
 
 }

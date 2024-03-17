@@ -16,7 +16,9 @@ class CreateExamResultsTable extends Migration
     {
         Schema::create('exam_results', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('school_id');
             $table->unsignedBigInteger('exam_id');
+            $table->unsignedBigInteger('class_id');
             $table->unsignedBigInteger('student_id');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
